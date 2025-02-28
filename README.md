@@ -54,4 +54,4 @@ The application is optimized for medium-sized mobile devices and has been tested
 
 ### App Preview/Попередній перегляд додатку
 
-<img src="assets/images/app_preview.gif" width="493" height="852"/>
+<img src="assets/images/app_preview.gif" width="393" height="852"/>
