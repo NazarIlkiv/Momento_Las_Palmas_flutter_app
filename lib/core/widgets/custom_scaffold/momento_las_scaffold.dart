@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:momento_las_palmas/core/constants/app_colors.dart';
@@ -43,7 +45,7 @@ class MomentoLasScaffold extends StatelessWidget {
   AppBar _appBar(BuildContext context) => AppBar(
         elevation: 0,
         backgroundColor: const Color(0xFF3F3F3F),
-        toolbarHeight: 100,
+        toolbarHeight: Platform.isAndroid ? 130 : 100,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(32),
