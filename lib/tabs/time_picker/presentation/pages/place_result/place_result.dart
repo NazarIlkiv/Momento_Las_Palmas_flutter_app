@@ -63,69 +63,75 @@ class _PlaceResultState extends State<PlaceResult> {
   }
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<PlacesCubit, PlacesState>(
-        builder: (BuildContext context, PlacesState state) => state.when(
-          initial: () => const Center(
-            child: CircularProgressIndicator(color: AppColors.colorWhitePrimary),
-          ),
-          loading: () => const Center(
-            child: CircularProgressIndicator(color: AppColors.colorWhitePrimary),
-          ),
-          error: (String message) => Center(
-            child: Text("Error: $message",
-                style: const TextStyle(color: AppColors.colorWhitePrimary)),
-          ),
-          loaded: (List<PlacesCategory> places, List<PlaceItem> favourites) {
-            final String timeRange = determineTimeRange(widget.hour);
-            final PlacesCategory? category = places
-                .firstWhereOrNull((PlacesCategory p) => p.time == timeRange);
-            if (category != null && category.items.isNotEmpty) {
-              selectedPlace ??=
-                  category.items[Random().nextInt(category.items.length)];
-            }
-
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                child: CustomScrollView(
-                  slivers: <Widget>[
-                    SliverToBoxAdapter(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          const SizedBox(height: 30.0),
-                          _title(timeRange, subtitles[timeRange] ?? ""),
-                          const SizedBox(height: 30.0),
-                          if (selectedPlace != null)
-                            PlaceInfoCard(place: selectedPlace!),
-                          const SizedBox(height: 30.0),
-                          LasPalmasMainButton(
-                            onTap: () => widget.tabController.animateTo(0),
-                            buttonText: 'Search new',
-                          ),
-                          const SizedBox(height: 16.0),
-                          const SizedBox(height: 120.0),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
+  Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    return BlocBuilder<PlacesCubit, PlacesState>(
+      builder: (BuildContext context, PlacesState state) => state.when(
+        initial: () => const Center(
+          child: CircularProgressIndicator(color: AppColors.colorWhitePrimary),
         ),
-      );
+        loading: () => const Center(
+          child: CircularProgressIndicator(color: AppColors.colorWhitePrimary),
+        ),
+        error: (String message) => Center(
+          child: Text("Error: $message",
+              style: const TextStyle(color: AppColors.colorWhitePrimary)),
+        ),
+        loaded: (List<PlacesCategory> places, List<PlaceItem> favourites) {
+          final String timeRange = determineTimeRange(widget.hour);
+          final PlacesCategory? category = places
+              .firstWhereOrNull((PlacesCategory p) => p.time == timeRange);
+          if (category != null && category.items.isNotEmpty) {
+            selectedPlace ??=
+                category.items[Random().nextInt(category.items.length)];
+          }
 
-  Widget _title(String title, String subtitle) => SizedBox(
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40.0),
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        const SizedBox(height: 30.0),
+                        _title(
+                            timeRange, subtitles[timeRange] ?? "", screenWidth),
+                        const SizedBox(height: 30.0),
+                        if (selectedPlace != null)
+                          PlaceInfoCard(
+                            place: selectedPlace!,
+                          ),
+                        const SizedBox(height: 30.0),
+                        LasPalmasMainButton(
+                          onTap: () => widget.tabController.animateTo(0),
+                          buttonText: 'Search new',
+                        ),
+                        const SizedBox(height: 16.0),
+                        const SizedBox(height: 120.0),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _title(String title, String subtitle, double screenWidth) => SizedBox(
         width: 300.0,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.colorWhitePrimary,
-                fontSize: 24,
+                fontSize: screenWidth > 375 ? 24 : 18,
                 fontWeight: FontWeight.w800,
               ),
               textAlign: TextAlign.center,
@@ -133,9 +139,9 @@ class _PlaceResultState extends State<PlaceResult> {
             const SizedBox(height: 8),
             Text(
               subtitle,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.colorWhitePrimary,
-                fontSize: 16,
+                fontSize: screenWidth > 375 ? 16 : 12,
               ),
               textAlign: TextAlign.center,
             ),

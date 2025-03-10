@@ -21,31 +21,38 @@ class MomentoLasScaffold extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-        create: (_) => getIt<PlacesCubit>(),
-        child: Scaffold(
-          appBar: _appBar(context),
-          backgroundColor: gradientBackground
-              ? Colors.transparent
-              : AppColors.colorBlackPrimary,
-          body: Stack(
-            children: <Widget>[
-              Positioned.fill(child: body),
-              Positioned(
-                bottom: 50,
-                left: 0,
-                right: 0,
-                child: _bottomNavBar(context),
-              ),
-            ],
-          ),
+  Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    return BlocProvider(
+      create: (_) => getIt<PlacesCubit>(),
+      child: Scaffold(
+        appBar: _appBar(context, screenWidth),
+        backgroundColor: gradientBackground
+            ? Colors.transparent
+            : AppColors.colorBlackPrimary,
+        body: Stack(
+          children: <Widget>[
+            Positioned.fill(child: body),
+            Positioned(
+              bottom: 50,
+              left: 0,
+              right: 0,
+              child: _bottomNavBar(context),
+            ),
+          ],
         ),
-      );
+      ),
+    );
+  }
 
-  AppBar _appBar(BuildContext context) => AppBar(
+  AppBar _appBar(
+    BuildContext context,
+    double screenWidth,
+  ) =>
+      AppBar(
         elevation: 0,
         backgroundColor: const Color(0xFF3F3F3F),
-        toolbarHeight: Platform.isAndroid ? 130 : 100,
+        toolbarHeight: Platform.isAndroid ? 130 : screenWidth > 375 ? 100 : 130,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(32),

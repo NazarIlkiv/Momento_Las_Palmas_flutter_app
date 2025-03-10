@@ -69,74 +69,92 @@ class _SpinTabState extends State<SpinTab> with SingleTickerProviderStateMixin {
         ),
       );
 
-  Widget _spinWheelView() => Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              const SizedBox(height: 40.0),
-              _title(),
-              const SizedBox(height: 30.0),
-              Stack(
-                alignment: Alignment.center,
+  Widget _spinWheelView() {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  AnimatedBuilder(
-                    animation: _controller,
-                    builder: (BuildContext context, Widget? child) =>
-                        Transform.rotate(
-                      angle: _animation.value,
-                      child: Image.asset(
-                        'assets/images/spin_images/circle_icon.png',
-                        width: 300,
-                        height: 300,
+                  SizedBox(height: screenWidth > 375 ? 40 : 10),
+                  _title(),
+                  SizedBox(height: screenWidth > 375 ? 30 : 10),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      AnimatedBuilder(
+                        animation: _controller,
+                        builder: (BuildContext context, Widget? child) =>
+                            Transform.rotate(
+                          angle: _animation.value,
+                          child: Image.asset(
+                            'assets/images/spin_images/circle_icon.png',
+                            width: 300,
+                            height: 300,
+                          ),
+                        ),
                       ),
-                    ),
+                      Positioned(
+                        bottom: -30,
+                        child: Image.asset(
+                          'assets/images/spin_images/triangle_icon.png',
+                          width: 78,
+                          height: 78,
+                        ),
+                      ),
+                    ],
                   ),
-                  Positioned(
-                    bottom: -30,
-                    child: Image.asset(
-                      'assets/images/spin_images/triangle_icon.png',
-                      width: 78,
-                      height: 78,
-                    ),
+                  const SizedBox(height: 30.0),
+                  LasPalmasMainButton(
+                    onTap: _spinWheel,
+                    buttonText: 'Surprise me',
                   ),
+                  if (screenWidth > 375)
+                    const Spacer()
+                  else
+                    const SizedBox(
+                      height: 130,
+                    ),
                 ],
               ),
-              const SizedBox(height: 30.0),
-              LasPalmasMainButton(
-                onTap: _spinWheel,
-                buttonText: 'Surprise me',
-              ),
-              const Spacer(),
-            ],
+            ),
           ),
         ),
-      );
+      ],
+    );
+  }
 
-  Widget _title() => const SizedBox(
-        width: 300.0,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Feeling Spontaneous?',
-              style: TextStyle(
-                color: AppColors.colorWhitePrimary,
-                fontSize: 24,
-                fontWeight: FontWeight.w800,
-              ),
+  Widget _title() {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    return SizedBox(
+      width: 300.0,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Feeling Spontaneous?',
+            style: TextStyle(
+              color: AppColors.colorWhitePrimary,
+              fontSize: screenWidth > 375 ? 24 : 18,
+              fontWeight: FontWeight.w800,
             ),
-            SizedBox(height: 8),
-            Text(
-              'Let fate decide your next destination in Las Palmas!',
-              style: TextStyle(
-                color: AppColors.colorWhitePrimary,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Let fate decide your next destination in Las Palmas!',
+            style: TextStyle(
+              color: AppColors.colorWhitePrimary,
+              fontSize: screenWidth > 375 ? 16 : 12,
             ),
-          ],
-        ),
-      );
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
 }

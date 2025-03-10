@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   int _selectedIndex = 3;
+  String? _mapCoordinates;
 
   void _onTabSelected(int index) {
     setState(() {
@@ -27,6 +28,13 @@ class HomePageState extends State<HomePage> {
   void backToTimePickerTab() {
     setState(() {
       _selectedIndex = 3;
+    });
+  }
+
+  void backToMap({String? coordinates}) {
+    setState(() {
+      _selectedIndex = 4;
+      _mapCoordinates = coordinates;
     });
   }
 
@@ -47,7 +55,7 @@ class HomePageState extends State<HomePage> {
         body = const TimePickerTab();
         break;
       case 4:
-        body = const MapTab();
+        body = MapTab(initialCoordinates: _mapCoordinates ?? '');
         break;
       default:
         body = const Center(child: Text('Unknown tab'));

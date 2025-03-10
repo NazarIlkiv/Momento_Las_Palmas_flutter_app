@@ -38,35 +38,39 @@ class _FindingPlacesState extends State<FindingPlaces>
   }
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            const SizedBox(height: 30.0),
-            _title(),
-            const SizedBox(height: 30.0),
-          
-            RotationTransition(
-              turns: _animationController,
-              child: Image.asset(
-                'assets/images/splash_icons/loading_time_icon.png',
-                width: 300,
-                height: 300,
-              ),
+  Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(height: screenWidth > 375 ? 30 : 10),
+          _title(screenWidth),
+          SizedBox(height: screenWidth > 375 ? 30 : 10),
+          RotationTransition(
+            turns: _animationController,
+            child: Image.asset(
+              'assets/images/splash_icons/loading_time_icon.png',
+              width: 300,
+              height: 300,
             ),
-            
+          ),
+          if (screenWidth > 375) ...<Widget>[
             const SizedBox(height: 30.0),
             LasPalmasMainButton(
               onTap: () {},
               buttonText: 'Please wait...',
             ),
             const Spacer(),
-          ],
-        ),
-      );
+          ] else
+            const SizedBox.shrink(),
+        ],
+      ),
+    );
+  }
 
-  Widget _title() => const SizedBox(
+  Widget _title(double screenWidth) => SizedBox(
         width: 300.0,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,17 +79,17 @@ class _FindingPlacesState extends State<FindingPlaces>
               'Finding the perfect place...',
               style: TextStyle(
                 color: AppColors.colorWhitePrimary,
-                fontSize: 24,
+                fontSize: screenWidth > 375 ? 24 : 18,
                 fontWeight: FontWeight.w800,
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Hold on while we match you with the best location in Las Palmas.',
               style: TextStyle(
                 color: AppColors.colorWhitePrimary,
-                fontSize: 16,
+                fontSize: screenWidth > 375 ? 16 : 12,
               ),
               textAlign: TextAlign.center,
             ),

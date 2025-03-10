@@ -71,10 +71,14 @@ class _TimePickerTabState extends State<TimePickerTab> {
               physics: const NeverScrollableScrollPhysics(),
               children: <Widget>[
                 _clockPickerView(),
-                FindingPlaces(tabController: _tabController),
-                PlaceResult(
-                  tabController: _tabController,
-                  hour: _hourController.text,
+                _buildScrollableView(
+                  FindingPlaces(tabController: _tabController),
+                ),
+                _buildScrollableView(
+                  PlaceResult(
+                    tabController: _tabController,
+                    hour: _hourController.text,
+                  ),
                 ),
               ],
             );
@@ -82,108 +86,132 @@ class _TimePickerTabState extends State<TimePickerTab> {
         ),
       );
 
+  Widget _buildScrollableView(Widget child) => CustomScrollView(
+        slivers: <Widget>[
+          SliverFillRemaining(
+            hasScrollBody: true,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 0.0),
+              child: child,
+            ),
+          ),
+        ],
+      );
+
   Widget _clockPickerView() {
     const double size = 300.0;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        const SizedBox(height: 40.0),
-        _title(),
-        const SizedBox(height: 30.0),
-        GestureDetector(
-          onTapUp: (TapUpDetails details) => _onTapUp(details, size),
-          child: SizedBox(
-            width: size,
-            height: size,
-            child: Stack(
-              alignment: Alignment.center,
+    final double screenWidth = MediaQuery.of(context).size.width;
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverPadding(
+          padding: EdgeInsets.only(bottom: screenWidth > 375 ? 0 : 120),
+          sliver: SliverFillRemaining(
+            hasScrollBody: true,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                CustomPaint(
-                  size: const Size(size, size),
-                  painter: _ClockFacePainter(),
-                ),
-                ...List.generate(12, (int index) {
-                  final int hourValue = (index == 0) ? 12 : index;
-                  final double angle = (index / 12) * 2 * math.pi - math.pi / 2;
-                  const double radius = size / 2 - 30;
-                  final double x = radius * math.cos(angle);
-                  final double y = radius * math.sin(angle);
-
-                  final bool isSelected = hourValue == _selectedHour;
-
-                  return Transform.translate(
-                    offset: Offset(x, y),
-                    child: Container(
-                      width: 40,
+                SizedBox(height: screenWidth > 375 ? 40 : 20),
+                _title(),
+                SizedBox(height: screenWidth > 375 ? 30 : 10),
+                GestureDetector(
+                  onTapUp: (TapUpDetails details) => _onTapUp(details, size),
+                  child: SizedBox(
+                    width: size,
+                    height: size,
+                    child: Stack(
                       alignment: Alignment.center,
-                      decoration: isSelected
-                          ? const BoxDecoration(
-                              color: Color(
-                                0xFFBF9A30,
-                              ),
-                              shape: BoxShape.circle,
-                            )
-                          : null,
-                      child: Text(
-                        hourValue.toString(),
-                        style: const TextStyle(
-                          color: AppColors.colorWhitePrimary,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
+                      children: <Widget>[
+                        CustomPaint(
+                          size: const Size(size, size),
+                          painter: _ClockFacePainter(),
                         ),
-                      ),
+                        ...List.generate(12, (int index) {
+                          final int hourValue = (index == 0) ? 12 : index;
+                          final double angle =
+                              (index / 12) * 2 * math.pi - math.pi / 2;
+                          const double radius = size / 2 - 30;
+                          final double x = radius * math.cos(angle);
+                          final double y = radius * math.sin(angle);
+
+                          final bool isSelected = hourValue == _selectedHour;
+
+                          return Transform.translate(
+                            offset: Offset(x, y),
+                            child: Container(
+                              width: 40,
+                              alignment: Alignment.center,
+                              decoration: isSelected
+                                  ? const BoxDecoration(
+                                      color: Color(
+                                        0xFFBF9A30,
+                                      ),
+                                      shape: BoxShape.circle,
+                                    )
+                                  : null,
+                              child: Text(
+                                hourValue.toString(),
+                                style: const TextStyle(
+                                  color: AppColors.colorWhitePrimary,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                        CustomPaint(
+                          size: const Size(size, size),
+                          painter: _HourHandPainter(_selectedHour),
+                        ),
+                        Positioned(
+                          child: Container(
+                            width: 90,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: AppColors.colorBlackPrimary,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: const Color(0xFFBF9A30),
+                                width: 2,
+                              ),
+                            ),
+                            child: TextField(
+                              controller: _hourController,
+                              textAlign: TextAlign.center,
+                              cursorColor: AppColors.colorWhitePrimary,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.all(0),
+                              ),
+                              style: const TextStyle(
+                                fontSize: 24,
+                                color: AppColors.colorWhitePrimary,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              keyboardType: TextInputType.number,
+                              onEditingComplete: () {
+                                _formatHourInput(
+                                  forceFormat: true,
+                                );
+                                FocusScope.of(context).unfocus();
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  );
-                }),
-                CustomPaint(
-                  size: const Size(size, size),
-                  painter: _HourHandPainter(_selectedHour),
+                  ),
                 ),
-                Positioned(
-                  child: Container(
-                    width: 90,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: AppColors.colorBlackPrimary,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: const Color(0xFFBF9A30),
-                        width: 2,
-                      ),
-                    ),
-                    child: TextField(
-                      controller: _hourController,
-                      textAlign: TextAlign.center,
-                      cursorColor: AppColors.colorWhitePrimary,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(0),
-                      ),
-                      style: const TextStyle(
-                        fontSize: 24,
-                        color: AppColors.colorWhitePrimary,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      keyboardType: TextInputType.number,
-                      onEditingComplete: () {
-                        _formatHourInput(
-                          forceFormat: true,
-                        );
-                        FocusScope.of(context).unfocus();
-                      },
-                    ),
+                const SizedBox(height: 30.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  child: LasPalmasMainButton(
+                    onTap: () => _tabController.animateTo(1),
+                    buttonText: 'Find Places →',
                   ),
                 ),
               ],
             ),
-          ),
-        ),
-        const SizedBox(height: 30.0),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0),
-          child: LasPalmasMainButton(
-            onTap: () => _tabController.animateTo(1),
-            buttonText: 'Find Places →',
           ),
         ),
       ],

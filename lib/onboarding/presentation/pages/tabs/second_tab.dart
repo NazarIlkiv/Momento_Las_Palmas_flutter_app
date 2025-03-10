@@ -11,49 +11,64 @@ class SecondTab extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 70,
-          horizontal: 32.0,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const Text(
-              'How It Works?',
-              style: TextStyle(
-                color: AppColors.colorWhitePrimary,
-                fontSize: 24,
-                fontWeight: FontWeight.w800,
-              ),
-              textAlign: TextAlign.left,
+  Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: 50,
+        horizontal: 32.0,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Text(
+            'How It Works?',
+            style: TextStyle(
+              color: AppColors.colorWhitePrimary,
+              fontSize: 24,
+              fontWeight: FontWeight.w800,
             ),
-            const SizedBox(height: 18),
-            const Text(
-              '🔹 Choose a time – Enter the time you want to explore.',
-              style: TextStyle(
-                color: AppColors.colorWhitePrimary,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.left,
-            ),
-            const Text(
-              '🔹 Get recommendations – The app finds the best places for that time.',
-              style: TextStyle(
-                color: AppColors.colorWhitePrimary,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.left,
-            ),
-            const Spacer(),
-            TabButton(
-              onTap: onNext,
-            ),
+            textAlign: TextAlign.left,
+          ),
+          if (screenWidth > 375)
             const SizedBox(
-              height: 20,
+              height: 16,
+            )
+          else
+            const SizedBox(
+              height: 12,
             ),
-          ],
-        ),
-      );
+          const Text(
+            '🔹 Choose a time – Enter the time you want to explore.',
+            style: TextStyle(
+              color: AppColors.colorWhitePrimary,
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.left,
+          ),
+          const Text(
+            '🔹 Get recommendations – The app finds the best places for that time.',
+            style: TextStyle(
+              color: AppColors.colorWhitePrimary,
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.left,
+          ),
+          if (screenWidth > 375)
+            const SizedBox(
+              height: 16,
+            )
+          else
+            const SizedBox(
+              height: 12,
+            ),
+          TabButton(
+            onTap: onNext,
+          ),
+          const Spacer(),
+        ],
+      ),
+    );
+  }
 }

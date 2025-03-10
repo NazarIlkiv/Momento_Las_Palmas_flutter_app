@@ -26,92 +26,101 @@ class BlogItem extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       color: AppColors.colorBlackPrimary,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              GestureDetector(
-                onTap: onClose,
-                child: const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Icon(
-                    Icons.chevron_left,
-                    color: Color(0xFFBF9A30),
-                    size: 24,
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverToBoxAdapter(
+            child: Row(
+              children: <Widget>[
+                GestureDetector(
+                  onTap: onClose,
+                  child: const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: Icon(
+                      Icons.chevron_left,
+                      color: Color(0xFFBF9A30),
+                      size: 24,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 2),
-              const Text(
-                'Reading:',
-                style: TextStyle(
-                  fontSize: 14.0,
-                  color: AppColors.colorWhitePrimary,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            blog!.title,
-            style: const TextStyle(
-              color: AppColors.colorWhitePrimary,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            blog!.paragraphOne,
-            style: const TextStyle(
-              color: AppColors.colorWhitePrimary,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            blog!.paragraphTwo,
-            style: const TextStyle(
-              color: AppColors.colorWhitePrimary,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 18),
-          Row(
-            children: <Widget>[
-              BlogButton(
-                onTap: onClose,
-                buttonText: 'Close',
-              ),
-              const SizedBox(width: 12.0),
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  border: Border.all(
+                const SizedBox(width: 2),
+                const Text(
+                  'Reading:',
+                  style: TextStyle(
+                    fontSize: 14.0,
                     color: AppColors.colorWhitePrimary,
-                    width: 1,
+                    fontWeight: FontWeight.w500,
                   ),
-                  borderRadius: BorderRadius.circular(8),
                 ),
-                child: IconButton(
-                  onPressed: onShareText,
-                  icon: const Icon(Icons.share, color: AppColors.colorWhitePrimary),
-                  iconSize: 20,
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-          const Spacer(),
+          const SliverToBoxAdapter(child: SizedBox(height: 16)),
+          SliverToBoxAdapter(
+            child: Text(
+              blog!.title,
+              style: const TextStyle(
+                color: AppColors.colorWhitePrimary,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 16)),
+          SliverToBoxAdapter(
+            child: Text(
+              blog!.paragraphOne,
+              style: const TextStyle(
+                color: AppColors.colorWhitePrimary,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 16)),
+          SliverToBoxAdapter(
+            child: Text(
+              blog!.paragraphTwo,
+              style: const TextStyle(
+                color: AppColors.colorWhitePrimary,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 18)),
+          SliverToBoxAdapter(
+            child: Row(
+              children: <Widget>[
+                BlogButton(
+                  onTap: onClose,
+                  buttonText: 'Close',
+                ),
+                const SizedBox(width: 12.0),
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColors.colorWhitePrimary,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: IconButton(
+                    onPressed: onShareText,
+                    icon: const Icon(Icons.share, color: AppColors.colorWhitePrimary),
+                    iconSize: 20,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 130)),
         ],
       ),
     );

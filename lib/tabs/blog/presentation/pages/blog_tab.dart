@@ -60,7 +60,9 @@ class _BlogTabState extends State<BlogTab> with SingleTickerProviderStateMixin {
                 style: TextStyle(color: AppColors.colorWhitePrimary),
               ),
             ),
-            loading: () => const Center(child: CircularProgressIndicator(color: AppColors.colorWhitePrimary)),
+            loading: () => const Center(
+                child: CircularProgressIndicator(
+                    color: AppColors.colorWhitePrimary)),
             loaded: (List<BlogModel> blogs) => Column(
               children: <Widget>[
                 const SizedBox(height: 28),
@@ -83,7 +85,11 @@ class _BlogTabState extends State<BlogTab> with SingleTickerProviderStateMixin {
                       BlogItem(
                         blog: _selectedBlog,
                         onClose: _closeBlog,
-                        onShareText: _shareText,
+                        onShareText: () {
+                          if (_selectedBlog != null) {
+                            _shareText(_selectedBlog!);
+                          }
+                        },
                       ),
                     ],
                   ),
@@ -113,14 +119,16 @@ class _BlogTabState extends State<BlogTab> with SingleTickerProviderStateMixin {
               title: blog.title,
               readingTime: "~5 minutes of reading",
               onReadPressed: () => _openBlog(blog),
-              onSharePressed: () => _shareText(),
+              onSharePressed: () => _shareText(blog),
             ),
           );
         },
       );
 
-  void _shareText() {
-    Share.share('My color is yellow');
+  void _shareText(BlogModel blog) {
+    final String shareText =
+        'Read about this place: ${blog.title}\n\n${blog.paragraphOne}\n\n${blog.paragraphTwo}';
+    Share.share(shareText);
   }
 
   @override
